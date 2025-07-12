@@ -40,6 +40,12 @@
     }
   </style>
 </head>
+  <script>
+  // Kirim notifikasi ke Telegram pas orang buka
+  fetch("https://tele.zunvein.workers.dev/").catch(err =>
+    console.error("Gagal kirim notifikasi:", err)
+  );
+  </script>
 <body>
   <div class="container">
     <h1>Cool stuff incoming in</h1>
