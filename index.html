@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cool stuff incoming...</title>
+  <title>Cool stuff incoming in...</title>
   <style>
     * {
       box-sizing: border-box;
@@ -24,12 +24,14 @@
     }
 
     .container {
-      max-width: 90%;
+      max-width: 100%;
     }
 
     h1 {
-      font-size: clamp(1.5rem, 5vw, 3rem);
+      font-size: clamp(1.5rem, 6vw, 3rem);
       margin-bottom: 1rem;
+      white-space: nowrap;
+      overflow-wrap: normal;
     }
 
     .countdown {
@@ -40,7 +42,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Cool stuff gonna appear in...</h1>
+    <h1>Cool stuff incoming in</h1>
     <div class="countdown" id="countdown">3</div>
   </div>
 
