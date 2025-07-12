@@ -2,33 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cool stuff incoming...</title>
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      background-color: #0f0f0f;
+      background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
       color: #fff;
       font-family: 'Segoe UI', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      flex-direction: column;
       text-align: center;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 90%;
+    }
+
+    h1 {
+      font-size: clamp(1.5rem, 5vw, 3rem);
+      margin-bottom: 1rem;
     }
 
     .countdown {
-      font-size: 2rem;
-      margin-top: 1rem;
+      font-size: clamp(2rem, 10vw, 5rem);
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h1>Cool sh*t gonna appear in...</h1>
-  <div class="countdown" id="countdown">3</div>
+  <div class="container">
+    <h1>Cool stuff gonna appear in...</h1>
+    <div class="countdown" id="countdown">3</div>
+  </div>
 
   <script>
     const urls = [
-      "https://zunvein.carrd.co",
+      "https://x.com/zunvein",
       "https://letterboxd.com/zunvein",
       "https://www.instagram.com/zunvein",
       "https://open.spotify.com/user/313ckj3jw2z4o2vwpvztc4y43g64?si=RMN2tyQMQxyvYk1jk3peEg",
@@ -36,16 +54,15 @@
     ];
 
     const randomUrl = urls[Math.floor(Math.random() * urls.length)];
-
     let count = 3;
-    const countdownElement = document.getElementById("countdown");
+    const countdownEl = document.getElementById("countdown");
 
     const countdownInterval = setInterval(() => {
       count--;
       if (count > 0) {
-        countdownElement.textContent = count;
+        countdownEl.textContent = count;
       } else {
-        countdownElement.textContent = "GO!";
+        countdownEl.textContent = "GO!";
         clearInterval(countdownInterval);
         setTimeout(() => {
           window.location.replace(randomUrl);
