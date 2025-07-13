@@ -2,68 +2,98 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Redirecting...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cool stuff incoming in...</title>
+
+  <!-- Import IBM Plex Mono -->
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet" />
+
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      background: black;
-      color: white;
-      font-family: 'Courier New', monospace;
+      background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+      color: #fff;
+      font-family: 'IBM Plex Mono', monospace;
       display: flex;
       justify-content: center;
       align-items: center;
-      text-align: center;
       height: 100vh;
-      margin: 0;
+      text-align: center;
+      padding: 2rem;
     }
+
+    .container {
+      max-width: 100%;
+    }
+
     h1 {
-      font-size: 2rem;
+      font-size: clamp(1.5rem, 6vw, 3rem);
+      margin-bottom: 1rem;
       white-space: nowrap;
+      overflow-wrap: normal;
+      letter-spacing: 1px;
+      text-shadow: 0 0 5px #ffffff22;
     }
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 1.5rem;
-      }
+
+    .countdown {
+      font-size: clamp(2rem, 10vw, 5rem);
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px #ffffff33;
     }
   </style>
+
+  <!-- Kirim ping ke Worker pas dibuka -->
+  <script>
+    fetch("https://tele.zunvein.workers.dev/").catch(err =>
+      console.error("Gagal kirim notifikasi:", err)
+    );
+  </script>
 </head>
 <body>
-  <h1 id="countdown">Cool stuff incoming in 3...</h1>
+  <div class="container">
+    <h1>Cool stuff incoming in</h1>
+    <div class="countdown" id="countdown">3</div>
+  </div>
 
   <script>
-    const links = [
+    const rawLinks = [
       "https://zunvein.carrd.co",
+      "https://x.com/zunvein",
       "https://letterboxd.com/zunvein",
+      "https://instagram.com/_u/zunvein",
       "https://open.spotify.com/user/313ckj3jw2z4o2vwpvztc4y43g64?si=RMN2tyQMQxyvYk1jk3peEg",
-      "https://github.com/zunvein",
-      // pakai _u biar lebih sering buka IG App
-      "https://instagram.com/_u/zunvein"
+      "https://github.com/zunvein"
     ];
 
-    // Random URL
-    const chosen = links[Math.floor(Math.random() * links.length)];
+    const chosen = rawLinks[Math.floor(Math.random() * rawLinks.length)];
+    const countdownEl = document.getElementById("countdown");
 
-    // Deteksi Android Chrome buat intent:// fallback
+    // Deteksi IG dan Android Chrome
+    const isInstagram = chosen.includes("instagram.com/_u/");
     const isAndroidChrome = /Android/i.test(navigator.userAgent) && /Chrome/i.test(navigator.userAgent);
-    const isInstagramLink = chosen.includes("instagram.com/_u/");
 
     let count = 3;
-    const el = document.getElementById("countdown");
-
-    const countdown = setInterval(() => {
+    const interval = setInterval(() => {
       count--;
-      if (count <= 0) {
-        clearInterval(countdown);
-
-        // Jika link IG dan Android Chrome, redirect pakai intent
-        if (isInstagramLink && isAndroidChrome) {
-          window.location.href = "intent://instagram.com/_u/zunvein#Intent;package=com.instagram.android;scheme=https;end";
-        } else {
-          window.location.href = chosen;
-        }
-
+      if (count > 0) {
+        countdownEl.textContent = count;
       } else {
-        el.textContent = `Cool stuff incoming in ${count}...`;
+        countdownEl.textContent = "GO!";
+        clearInterval(interval);
+        setTimeout(() => {
+          // Kalau IG dan Android Chrome, pakai intent
+          if (isInstagram && isAndroidChrome) {
+            window.location.href = "intent://instagram.com/_u/zunvein#Intent;package=com.instagram.android;scheme=https;end";
+          } else {
+            window.location.href = chosen;
+          }
+        }, 500);
       }
     }, 1000);
   </script>
