@@ -2,79 +2,68 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cool stuff incoming in...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Redirecting...</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
     body {
-      background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
+      background: black;
+      color: white;
+      font-family: 'Courier New', monospace;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
       text-align: center;
-      padding: 2rem;
+      height: 100vh;
+      margin: 0;
     }
-
-    .container {
-      max-width: 100%;
-    }
-
     h1 {
-      font-size: clamp(1.5rem, 6vw, 3rem);
-      margin-bottom: 1rem;
+      font-size: 2rem;
       white-space: nowrap;
-      overflow-wrap: normal;
     }
-
-    .countdown {
-      font-size: clamp(2rem, 10vw, 5rem);
-      font-weight: bold;
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.5rem;
+      }
     }
   </style>
 </head>
-  <script>
-  // Kirim notifikasi ke Telegram pas orang buka
-  fetch("https://tele.zunvein.workers.dev/").catch(err =>
-    console.error("Gagal kirim notifikasi:", err)
-  );
-  </script>
 <body>
-  <div class="container">
-    <h1>Cool stuff incoming in</h1>
-    <div class="countdown" id="countdown">3</div>
-  </div>
+  <h1 id="countdown">Cool stuff incoming in 3...</h1>
 
   <script>
-    const urls = [
-      "https://x.com/zunvein",
+    const links = [
+      "https://zunvein.carrd.co",
       "https://letterboxd.com/zunvein",
-      "https://www.instagram.com/zunvein",
       "https://open.spotify.com/user/313ckj3jw2z4o2vwpvztc4y43g64?si=RMN2tyQMQxyvYk1jk3peEg",
-      "https://github.com/zunvein"
+      "https://github.com/zunvein",
+      // pakai _u biar lebih sering buka IG App
+      "https://instagram.com/_u/zunvein"
     ];
 
-    const randomUrl = urls[Math.floor(Math.random() * urls.length)];
-    let count = 3;
-    const countdownEl = document.getElementById("countdown");
+    // Random URL
+    const chosen = links[Math.floor(Math.random() * links.length)];
 
-    const countdownInterval = setInterval(() => {
+    // Deteksi Android Chrome buat intent:// fallback
+    const isAndroidChrome = /Android/i.test(navigator.userAgent) && /Chrome/i.test(navigator.userAgent);
+    const isInstagramLink = chosen.includes("instagram.com/_u/");
+
+    let count = 3;
+    const el = document.getElementById("countdown");
+
+    const countdown = setInterval(() => {
       count--;
-      if (count > 0) {
-        countdownEl.textContent = count;
+      if (count <= 0) {
+        clearInterval(countdown);
+
+        // Jika link IG dan Android Chrome, redirect pakai intent
+        if (isInstagramLink && isAndroidChrome) {
+          window.location.href = "intent://instagram.com/_u/zunvein#Intent;package=com.instagram.android;scheme=https;end";
+        } else {
+          window.location.href = chosen;
+        }
+
       } else {
-        countdownEl.textContent = "GO!";
-        clearInterval(countdownInterval);
-        setTimeout(() => {
-          window.location.replace(randomUrl);
-        }, 500);
+        el.textContent = `Cool stuff incoming in ${count}...`;
       }
     }, 1000);
   </script>
