@@ -79,48 +79,56 @@
   </div>
 
   <script>
-    const rawLinks = [
-      "https://x.com/zunvein",
-      "https://letterboxd.com/zunvein",
-      "https://instagram.com/_u/zunvein",
-      "https://open.spotify.com/user/313ckj3jw2z4o2vwpvztc4y43g64?si=RMN2tyQMQxyvYk1jk3peEg",
-      "https://github.com/zunvein"
-    ];
+  const rawLinks = [
+    "https://x.com/zunvein",
+    "https://letterboxd.com/zunvein",
+    "https://instagram.com/_u/zunvein",
+    "https://open.spotify.com/user/313ckj3jw2z4o2vwpvztc4y43g64?si=RMN2tyQMQxyvYk1jk3peEg",
+    "https://github.com/zunvein"
+  ];
 
-    const countdownEl = document.getElementById("countdown");
-    const randomLinkEl = document.getElementById("randomLink");
-    const linksContainer = document.querySelector(".links");
+  const countdownEl = document.getElementById("countdown");
+  const randomLinkEl = document.getElementById("randomLink");
+  const linksContainer = document.querySelector(".links");
 
-    randomLinkEl.addEventListener("click", (e) => {
-      e.preventDefault();
+  function startSurpriseRedirect() {
+    linksContainer.style.display = "none";
 
-      // Sembunyikan link lainnya
-      linksContainer.style.display = "none";
+    const chosen = rawLinks[Math.floor(Math.random() * rawLinks.length)];
+    const isInstagram = chosen.includes("instagram.com/_u/");
+    const isAndroidChrome = /Android/i.test(navigator.userAgent) && /Chrome/i.test(navigator.userAgent);
 
-      const chosen = rawLinks[Math.floor(Math.random() * rawLinks.length)];
-      const isInstagram = chosen.includes("instagram.com/_u/");
-      const isAndroidChrome = /Android/i.test(navigator.userAgent) && /Chrome/i.test(navigator.userAgent);
+    let count = 3;
+    countdownEl.innerHTML = `Giving random surprises in...<br>${count}`;
 
-      let count = 3;
-      countdownEl.innerHTML = `Giving random surprises in...<br>${count}`;
+    const interval = setInterval(() => {
+      count--;
+      if (count > 0) {
+        countdownEl.innerHTML = `Giving random surprises in...<br>${count}`;
+      } else {
+        countdownEl.textContent = `Redirecting...`;
+        clearInterval(interval);
+        setTimeout(() => {
+          if (isInstagram && isAndroidChrome) {
+            window.location.href = "intent://instagram.com/_u/zunvein#Intent;package=com.instagram.android;scheme=https;end";
+          } else {
+            window.location.href = chosen;
+          }
+        }, 300);
+      }
+    }, 1000);
+  }
 
-      const interval = setInterval(() => {
-        count--;
-        if (count > 0) {
-          countdownEl.innerHTML = `Giving random surprises in... <br> ${count}`;
-        } else {
-          countdownEl.textContent = `Redirecting...`;
-          clearInterval(interval);
-          setTimeout(() => {
-            if (isInstagram && isAndroidChrome) {
-              window.location.href = "intent://instagram.com/_u/zunvein#Intent;package=com.instagram.android;scheme=https;end";
-            } else {
-              window.location.href = chosen;
-            }
-          }, 300);
-        }
-      }, 1000);
-    });
+  // Klik manual
+  randomLinkEl.addEventListener("click", (e) => {
+    e.preventDefault();
+    startSurpriseRedirect();
+  });
+
+  // Auto-trigger jika URL mengandung #random
+  if (window.location.hash === "#random") {
+    startSurpriseRedirect();
+  }
   </script>
 </body>
 </html>
