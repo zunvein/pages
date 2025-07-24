@@ -3,58 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cool stuff incoming in...</title>
+  <title>Redirect Portal</title>
 
-  <!-- Import IBM Plex Mono -->
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet" />
 
   <style>
-html, body {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
+    html, body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
 
-body {
-  background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
-  color: #fff;
-  font-family: 'IBM Plex Mono', monospace;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
+    body {
+      background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+      color: #fff;
+      font-family: 'IBM Plex Mono', monospace;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
 
-.outer {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  padding: 2rem;
-}
+    .container {
+      padding: 2rem;
+    }
 
-.container {
-  max-width: 100%;
-  width: 100%;
-}
+    .countdown {
+      font-size: 0.9rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px #ffffff33;
+    }
 
-h1 {
-  font-size: clamp(1.5rem, 6vw, 3rem);
-  margin-bottom: 1rem;
-  line-height: 1.4;
-  letter-spacing: 1px;
-  text-shadow: 0 0 5px #ffffff22;
-}
+    .links {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
 
-.countdown {
-  font-size: clamp(2rem, 10vw, 5rem);
-  font-weight: bold;
-  letter-spacing: 2px;
-  text-shadow: 0 0 10px #ffffff33;
-}
+    .portfolio-link {
+      color: #fff;
+      font-size: 1.25rem;
+      text-decoration: underline;
+    }
+
+    .portfolio-link:hover {
+      text-decoration: underline;
+    }
+
+    .surprise-link {
+      color: #00ccff;
+      font-size: 1rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
   </style>
 
-  <!-- Kirim ping ke Worker pas dibuka -->
+  <!-- Ping ke Worker -->
   <script>
     fetch("https://tele.zunvein.workers.dev/").catch(err =>
       console.error("Gagal kirim notifikasi:", err)
@@ -63,13 +71,15 @@ h1 {
 </head>
 <body>
   <div class="container">
-    <h1>Cool stuff incoming in</h1>
-    <div class="countdown" id="countdown">3</div>
+    <div class="links">
+      <a class="portfolio-link" href="https://zunvein.carrd.co" target="_blank" rel="noopener noreferrer">Portfolio</a>
+      <a class="surprise-link" id="randomLink" href="#">Give me a surprise</a>
+    </div>
+    <div class="countdown" id="countdown"></div>
   </div>
 
   <script>
     const rawLinks = [
-      "https://zunvein.carrd.co",
       "https://x.com/zunvein",
       "https://letterboxd.com/zunvein",
       "https://instagram.com/_u/zunvein",
@@ -77,31 +87,40 @@ h1 {
       "https://github.com/zunvein"
     ];
 
-    const chosen = rawLinks[Math.floor(Math.random() * rawLinks.length)];
     const countdownEl = document.getElementById("countdown");
+    const randomLinkEl = document.getElementById("randomLink");
+    const linksContainer = document.querySelector(".links");
 
-    // Deteksi IG dan Android Chrome
-    const isInstagram = chosen.includes("instagram.com/_u/");
-    const isAndroidChrome = /Android/i.test(navigator.userAgent) && /Chrome/i.test(navigator.userAgent);
+    randomLinkEl.addEventListener("click", (e) => {
+      e.preventDefault();
 
-    let count = 3;
-    const interval = setInterval(() => {
-      count--;
-      if (count > 0) {
-        countdownEl.textContent = count;
-      } else {
-        countdownEl.textContent = "GO!";
-        clearInterval(interval);
-        setTimeout(() => {
-          // Kalau IG dan Android Chrome, pakai intent
-          if (isInstagram && isAndroidChrome) {
-            window.location.href = "intent://instagram.com/_u/zunvein#Intent;package=com.instagram.android;scheme=https;end";
-          } else {
-            window.location.href = chosen;
-          }
-        }, 500);
-      }
-    }, 1000);
+      // Sembunyikan link lainnya
+      linksContainer.style.display = "none";
+
+      const chosen = rawLinks[Math.floor(Math.random() * rawLinks.length)];
+      const isInstagram = chosen.includes("instagram.com/_u/");
+      const isAndroidChrome = /Android/i.test(navigator.userAgent) && /Chrome/i.test(navigator.userAgent);
+
+      let count = 3;
+      countdownEl.innerHTML = `Giving random surprises in...<br>${count}`;
+
+      const interval = setInterval(() => {
+        count--;
+        if (count > 0) {
+          countdownEl.innerHTML = `Giving random surprises in... <br> ${count}`;
+        } else {
+          countdownEl.textContent = `Redirecting...`;
+          clearInterval(interval);
+          setTimeout(() => {
+            if (isInstagram && isAndroidChrome) {
+              window.location.href = "intent://instagram.com/_u/zunvein#Intent;package=com.instagram.android;scheme=https;end";
+            } else {
+              window.location.href = chosen;
+            }
+          }, 300);
+        }
+      }, 1000);
+    });
   </script>
 </body>
 </html>
